@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}تماس با ما{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-5">
+                <span class="section-eyebrow">در ارتباط باشید</span>
+                <h1 class="section-title mt-2 mb-4">تماس با ما</h1>
+                <p class="text-muted mb-4">سوالی دارید؟ فرم زیر را پر کنید تا در سریع‌ترین زمان ممکن با شما تماس بگیریم.</p>
+
+                <div class="glass-card p-4 mb-3 d-flex align-items-center gap-3">
+                    <div class="discipline-icon mb-0"><i class="fa-solid fa-phone"></i></div>
+                    <div><h6 class="mb-0">تماس تلفنی</h6><span class="text-muted">{{ SITE_PHONE }}</span></div>
+                </div>
+                <div class="glass-card p-4 mb-3 d-flex align-items-center gap-3">
+                    <div class="discipline-icon mb-0"><i class="fa-solid fa-envelope"></i></div>
+                    <div><h6 class="mb-0">ایمیل</h6><span class="text-muted">{{ SITE_EMAIL }}</span></div>
+                </div>
+                <div class="glass-card p-4 d-flex align-items-center gap-3">
+                    <div class="discipline-icon mb-0"><i class="fa-solid fa-location-dot"></i></div>
+                    <div><h6 class="mb-0">آدرس</h6><span class="text-muted">{{ SITE_ADDRESS }}</span></div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="glass p-4 p-md-5">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">{{ form.full_name|as_crispy_field }}</div>
+                            <div class="col-md-6">{{ form.email|as_crispy_field }}</div>
+                            <div class="col-md-6">{{ form.phone_number|as_crispy_field }}</div>
+                            <div class="col-md-6">{{ form.subject|as_crispy_field }}</div>
+                            <div class="col-12">{{ form.message|as_crispy_field }}</div>
+                        </div>
+                        <button type="submit" class="btn btn-gradient btn-lg mt-3 w-100">
+                            <i class="fa-solid fa-paper-plane me-1"></i> ارسال پیام
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

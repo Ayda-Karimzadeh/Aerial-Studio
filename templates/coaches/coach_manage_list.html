@@ -1,0 +1,58 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% block title %}مدیریت مربیان{% endblock %}
+{% block dashboard_title %}مدیریت مربیان{% endblock %}
+{% block dashboard_subtitle %}افزودن، ویرایش و حذف مربیان{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-end mb-4">
+    <a href="{% url 'coaches:create' %}" class="btn btn-gradient"><i class="fa-solid fa-plus me-1"></i> ثبت مربی جدید</a>
+</div>
+
+<div class="glass-card p-4">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead><tr class="text-muted"><th>نام مربی</th><th>ایمیل</th><th>تخصص‌ها</th><th>سابقه</th><th>وضعیت</th><th></th></tr></thead>
+            <tbody>
+                {% for coach in coaches %}
+                <tr>
+                    <td class="fw-bold">{{ coach.user.get_full_name }}</td>
+                    <td class="text-muted">{{ coach.user.email }}</td>
+                    <td>
+                        {% for s in coach.specialties.all %}
+                        <span class="badge-status bg-primary-subtle text-primary small">{{ s.get_name_display }}</span>
+                        {% empty %}
+                        <span class="text-muted small">—</span>
+                        {% endfor %}
+                    </td>
+                    <td>{{ coach.years_of_experience }} سال</td>
+                    <td>
+                        {% if coach.is_active %}
+                        <span class="badge-status bg-success-subtle text-success">فعال</span>
+                        {% else %}
+                        <span class="badge-status bg-secondary-subtle text-secondary">غیرفعال</span>
+                        {% endif %}
+                    </td>
+                    <td class="d-flex gap-1">
+                        <a href="{% url 'coaches:detail' coach.pk %}" class="btn btn-sm btn-outline-gradient"><i class="fa-solid fa-eye"></i></a>
+                        <a href="{% url 'coaches:edit' coach.pk %}" class="btn btn-sm btn-outline-gradient"><i class="fa-solid fa-pen"></i></a>
+                        <a href="{% url 'coaches:delete' coach.pk %}" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">هنوز مربی‌ای ثبت نشده است.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if is_paginated %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>{% endif %}
+        <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>{% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

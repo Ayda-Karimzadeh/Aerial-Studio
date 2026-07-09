@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load core_tags %}
+{% block title %}{{ class_session.title }}{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <div class="glass overflow-hidden mb-4">
+                    <div class="class-card-img" style="height:280px;">
+                        <i class="fa-solid fa-ring fa-3x"></i>
+                    </div>
+                </div>
+                <span class="badge-status bg-primary-subtle text-primary">{{ class_session.discipline.get_name_display }}</span>
+                <span class="badge-status bg-secondary-subtle text-secondary">{{ class_session.get_level_display }}</span>
+                <h1 class="section-title mt-3">{{ class_session.title }}</h1>
+                <p class="text-muted">{{ class_session.description|default:"توضیحی برای این کلاس ثبت نشده است." }}</p>
+
+                <div class="row g-3 mt-2">
+                    <div class="col-6 col-md-3">
+                        <div class="glass-card p-3 text-center">
+                            <i class="fa-solid fa-user-tie navbar-brand-gradient mb-2"></i>
+                            <p class="small text-muted mb-0">مربی</p>
+                            <p class="fw-bold mb-0">{{ class_session.coach.get_full_name|default:"—" }}</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="glass-card p-3 text-center">
+                            <i class="fa-regular fa-calendar navbar-brand-gradient mb-2"></i>
+                            <p class="small text-muted mb-0">تاریخ</p>
+                            <p class="fw-bold mb-0">{{ class_session.session_date }}</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="glass-card p-3 text-center">
+                            <i class="fa-regular fa-clock navbar-brand-gradient mb-2"></i>
+                            <p class="small text-muted mb-0">ساعت</p>
+                            <p class="fw-bold mb-0">{{ class_session.start_time|time:"H:i" }}</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="glass-card p-3 text-center">
+                            <i class="fa-solid fa-dumbbell navbar-brand-gradient mb-2"></i>
+                            <p class="small text-muted mb-0">تجهیزات</p>
+                            <p class="fw-bold mb-0">{{ class_session.equipment_count }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="glass p-4 p-md-5" style="position: sticky; top: 100px;">
+                    <h3 class="fw-bold mb-3">{{ class_session.price|persian_currency }}</h3>
+                    <div class="capacity-bar mb-2">
+                        <div class="capacity-bar-fill" data-fill="{% percentage class_session.booked_count class_session.capacity %}"></div>
+                    </div>
+                    <p class="text-muted small mb-4">{{ class_session.remaining_capacity }} جای خالی از {{ class_session.capacity }} ظرفیت</p>
+
+                    {% if user.is_authenticated and user.is_student_role %}
+                        {% if class_session.is_full %}
+                        <button class="btn btn-secondary btn-lg w-100" disabled>ظرفیت تکمیل است</button>
+                        {% else %}
+                        <form method="post" action="{% url 'bookings:create' class_session.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-gradient btn-lg w-100">
+                                <i class="fa-solid fa-calendar-check me-1"></i> رزرو این کلاس
+                            </button>
+                        </form>
+                        {% endif %}
+                    {% elif not user.is_authenticated %}
+                    <a href="{% url 'accounts:login' %}" class="btn btn-gradient btn-lg w-100">برای رزرو وارد شوید</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

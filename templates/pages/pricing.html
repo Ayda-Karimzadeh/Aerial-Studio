@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}تعرفه‌ها{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-eyebrow">هزینه‌ها</span>
+            <h1 class="section-title mt-2">تعرفه دوره‌ها</h1>
+            <p class="text-muted">قیمت هر جلسه بر اساس رشته، سطح و مربی در صفحه هر کلاس مشخص شده است.</p>
+        </div>
+        <div class="row g-4">
+            {% for discipline in disciplines %}
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card discipline-card">
+                    <div class="discipline-icon">
+                        <i class="fa-solid {{ discipline.icon|default:'fa-wind' }}"></i>
+                    </div>
+                    <h5>{{ discipline.get_name_display }}</h5>
+                    <p class="text-muted small">{{ discipline.description|default:"برای مشاهده قیمت دقیق، کلاس‌های این رشته را ببینید." }}</p>
+                    <a href="{% url 'classes:list' %}?discipline={{ discipline.pk }}" class="btn btn-outline-gradient btn-sm mt-2">مشاهده کلاس‌ها</a>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">اطلاعاتی برای نمایش وجود ندارد.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

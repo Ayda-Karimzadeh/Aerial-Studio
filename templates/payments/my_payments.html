@@ -1,0 +1,27 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load core_tags %}
+{% block title %}پرداخت‌های من{% endblock %}
+{% block dashboard_title %}پرداخت‌های من{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead><tr class="text-muted"><th>کلاس</th><th>مبلغ</th><th>روش</th><th>وضعیت</th><th>تاریخ</th></tr></thead>
+            <tbody>
+                {% for p in payments %}
+                <tr>
+                    <td class="fw-bold">{{ p.booking.class_session.title }}</td>
+                    <td>{{ p.amount|persian_currency }}</td>
+                    <td>{{ p.get_method_display }}</td>
+                    <td><span class="badge-status bg-{{ p.status|badge_color }}-subtle text-{{ p.status|badge_color }}">{{ p.get_status_display }}</span></td>
+                    <td class="text-muted">{{ p.created_at|date:"Y/m/d" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center text-muted py-4">پرداختی ثبت نشده است.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

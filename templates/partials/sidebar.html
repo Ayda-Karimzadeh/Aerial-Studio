@@ -1,0 +1,35 @@
+<aside class="sidebar">
+    <div class="d-flex align-items-center gap-2 mb-4 px-2">
+        <i class="fa-solid fa-feather-pointed navbar-brand-gradient fs-3"></i>
+        <span class="navbar-brand-gradient fw-bold fs-5">Aerial Studio</span>
+    </div>
+
+    {% if user.is_superuser or user.role == 'admin' %}
+        <a href="{% url 'dashboard:admin_home' %}" class="sidebar-link {% if request.resolver_match.url_name == 'admin_home' %}active{% endif %}">
+            <i class="fa-solid fa-gauge"></i> داشبورد
+        </a>
+        <a href="{% url 'students:list' %}" class="sidebar-link"><i class="fa-solid fa-user-graduate"></i> هنرجویان</a>
+        <a href="{% url 'coaches:manage_list' %}" class="sidebar-link"><i class="fa-solid fa-chalkboard-user"></i> مربیان</a>
+        <a href="{% url 'classes:manage_list' %}" class="sidebar-link"><i class="fa-solid fa-ring"></i> کلاس‌ها</a>
+        <a href="{% url 'payments:list' %}" class="sidebar-link"><i class="fa-solid fa-credit-card"></i> پرداخت‌ها</a>
+        <a href="{% url 'reports:dashboard' %}" class="sidebar-link"><i class="fa-solid fa-chart-line"></i> گزارش‌ها</a>
+
+    {% elif user.role == 'coach' %}
+        <a href="{% url 'dashboard:coach_home' %}" class="sidebar-link"><i class="fa-solid fa-gauge"></i> داشبورد</a>
+        <a href="{% url 'classes:manage_list' %}" class="sidebar-link"><i class="fa-solid fa-ring"></i> کلاس‌های من</a>
+        <a href="{% url 'evaluations:create' %}" class="sidebar-link"><i class="fa-solid fa-star"></i> ثبت ارزیابی</a>
+        <a href="{% url 'evaluations:coach_list' %}" class="sidebar-link"><i class="fa-solid fa-list-check"></i> ارزیابی‌های من</a>
+
+    {% else %}
+        <a href="{% url 'dashboard:student_home' %}" class="sidebar-link"><i class="fa-solid fa-gauge"></i> داشبورد</a>
+        <a href="{% url 'bookings:calendar' %}" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> تقویم کلاس‌ها</a>
+        <a href="{% url 'bookings:list' %}" class="sidebar-link"><i class="fa-solid fa-ticket"></i> رزروهای من</a>
+        <a href="{% url 'payments:my_payments' %}" class="sidebar-link"><i class="fa-solid fa-credit-card"></i> پرداخت‌های من</a>
+        <a href="{% url 'evaluations:student_list' %}" class="sidebar-link"><i class="fa-solid fa-star"></i> ارزیابی‌های من</a>
+    {% endif %}
+
+    <hr style="border-color: var(--glass-border);">
+    <a href="{% url 'accounts:profile' %}" class="sidebar-link"><i class="fa-solid fa-user"></i> پروفایل من</a>
+    <a href="{% url 'pages:home' %}" class="sidebar-link"><i class="fa-solid fa-house"></i> بازگشت به سایت</a>
+    <a href="{% url 'accounts:logout' %}" class="sidebar-link"><i class="fa-solid fa-right-from-bracket"></i> خروج</a>
+</aside>

@@ -1,0 +1,23 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load core_tags %}
+{% block title %}جزئیات پرداخت{% endblock %}
+{% block dashboard_title %}جزئیات پرداخت{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4 p-md-5" style="max-width:650px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">کد پیگیری: <span class="text-muted small">{{ payment.tracking_code }}</span></h5>
+        <span class="badge-status bg-{{ payment.status|badge_color }}-subtle text-{{ payment.status|badge_color }}">{{ payment.get_status_display }}</span>
+    </div>
+    <p class="mb-1"><strong>هنرجو:</strong> {{ payment.student.get_full_name }}</p>
+    <p class="mb-1"><strong>کلاس:</strong> {{ payment.booking.class_session.title }}</p>
+    <p class="mb-1"><strong>مبلغ:</strong> {{ payment.amount|persian_currency }}</p>
+    <p class="mb-1"><strong>روش پرداخت:</strong> {{ payment.get_method_display }}</p>
+    {% if payment.paid_at %}
+    <p class="mb-1"><strong>تاریخ پرداخت:</strong> {{ payment.paid_at|date:"Y/m/d H:i" }}</p>
+    {% endif %}
+    {% if payment.notes %}
+    <p class="text-muted mt-3">{{ payment.notes }}</p>
+    {% endif %}
+</div>
+{% endblock %}

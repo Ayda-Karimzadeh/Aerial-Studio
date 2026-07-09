@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load core_tags crispy_forms_tags %}
+{% block title %}کلاس‌ها{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-eyebrow">همه کلاس‌ها</span>
+            <h1 class="section-title mt-2">کلاس‌های فعال</h1>
+        </div>
+
+        <div class="glass p-4 mb-5">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">{{ filter.form.discipline|as_crispy_field }}</div>
+                <div class="col-md-3">{{ filter.form.level|as_crispy_field }}</div>
+                <div class="col-md-3">{{ filter.form.session_date|as_crispy_field }}</div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-gradient w-100"><i class="fa-solid fa-filter me-1"></i> فیلتر</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row g-4">
+            {% for class_session in classes %}
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card class-card h-100">
+                    <div class="class-card-img">
+                        <i class="fa-solid fa-ring"></i>
+                    </div>
+                    <div class="p-4">
+                        <span class="badge-status bg-primary-subtle text-primary mb-2">{{ class_session.discipline.get_name_display }}</span>
+                        <span class="badge-status bg-secondary-subtle text-secondary mb-2">{{ class_session.get_level_display }}</span>
+                        <h5 class="mt-2">{{ class_session.title }}</h5>
+                        <p class="text-muted small mb-2">
+                            <i class="fa-regular fa-calendar me-1"></i> {{ class_session.session_date }}
+                            &nbsp; <i class="fa-regular fa-clock me-1"></i> {{ class_session.start_time|time:"H:i" }}
+                        </p>
+                        <div class="capacity-bar mb-2">
+                            <div class="capacity-bar-fill" data-fill="{% percentage class_session.booked_count class_session.capacity %}"></div>
+                        </div>
+                        <small class="text-muted d-block mb-2">{{ class_session.remaining_capacity }} جای خالی از {{ class_session.capacity }}</small>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">{{ class_session.price|persian_currency }}</span>
+                            <a href="{% url 'classes:detail' class_session.pk %}" class="btn btn-sm btn-gradient">جزئیات و رزرو</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted py-5">کلاسی مطابق با فیلتر شما یافت نشد.</p>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

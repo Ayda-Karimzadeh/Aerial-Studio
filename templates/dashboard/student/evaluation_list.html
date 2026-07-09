@@ -1,0 +1,23 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% block title %}ارزیابی‌های من{% endblock %}
+{% block dashboard_title %}ارزیابی‌های من{% endblock %}
+{% block dashboard_subtitle %}سوابق ارزیابی توسط مربیان{% endblock %}
+
+{% block dashboard_content %}
+<div class="row g-4">
+    {% for e in evaluations %}
+    <div class="col-md-6">
+        <div class="glass-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge-status bg-primary-subtle text-primary">{{ e.get_skill_level_display }}</span>
+                <span class="fw-bold">{{ e.score }}/10</span>
+            </div>
+            <p class="text-muted mb-2">{{ e.description }}</p>
+            <small class="text-muted">مربی: {{ e.coach.get_full_name }} — {{ e.created_at|date:"Y/m/d" }}</small>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted py-5">هنوز ارزیابی‌ای دریافت نکرده‌اید.</p>
+    {% endfor %}
+</div>
+{% endblock %}

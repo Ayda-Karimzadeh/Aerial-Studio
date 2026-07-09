@@ -1,0 +1,14 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}افزودن برنامه هفتگی{% endblock %}
+{% block dashboard_title %}افزودن برنامه هفتگی{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4 p-md-5" style="max-width:600px;">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-gradient mt-3">افزودن</button>
+    </form>
+</div>
+{% endblock %}

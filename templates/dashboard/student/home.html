@@ -1,0 +1,55 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load core_tags %}
+{% block title %}داشبورد هنرجو{% endblock %}
+{% block dashboard_title %}داشبورد من{% endblock %}
+{% block dashboard_subtitle %}خلاصه فعالیت‌های شما{% endblock %}
+
+{% block dashboard_content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-4 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-ticket"></i></div>
+            <div class="stat-value">{{ total_bookings }}</div>
+            <div class="stat-label">کل رزروها</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="glass-card p-4 h-100">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-calendar-check me-1"></i> رزروهای فعال</h6>
+            {% for booking in upcoming_bookings %}
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="border-color: var(--glass-border) !important;">
+                <div>
+                    <p class="mb-0 fw-bold">{{ booking.class_session.title }}</p>
+                    <small class="text-muted">{{ booking.class_session.session_date }} - {{ booking.class_session.start_time|time:"H:i" }}</small>
+                </div>
+                <span class="badge-status bg-success-subtle text-success">{{ booking.get_status_display }}</span>
+            </div>
+            {% empty %}
+            <p class="text-muted text-center py-3">رزرو فعالی ندارید.</p>
+            {% endfor %}
+            <a href="{% url 'bookings:calendar' %}" class="btn btn-gradient w-100 mt-3">
+                <i class="fa-solid fa-plus me-1"></i> رزرو کلاس جدید
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="glass-card p-4 h-100">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-star me-1"></i> آخرین ارزیابی‌ها</h6>
+            {% for e in recent_evaluations %}
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="border-color: var(--glass-border) !important;">
+                <div>
+                    <p class="mb-0 fw-bold">{{ e.get_skill_level_display }}</p>
+                    <small class="text-muted">توسط {{ e.coach.get_full_name }}</small>
+                </div>
+                <span class="badge-status bg-primary-subtle text-primary">{{ e.score }}/10</span>
+            </div>
+            {% empty %}
+            <p class="text-muted text-center py-3">ارزیابی‌ای دریافت نکرده‌اید.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

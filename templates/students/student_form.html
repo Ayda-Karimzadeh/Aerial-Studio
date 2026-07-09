@@ -1,0 +1,17 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{% if object %}ویرایش هنرجو{% else %}ثبت هنرجو{% endif %}{% endblock %}
+{% block dashboard_title %}{% if object %}ویرایش هنرجو{% else %}ثبت هنرجوی جدید{% endif %}{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4 p-md-5">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-gradient">ذخیره</button>
+            <a href="{% url 'students:list' %}" class="btn btn-outline-gradient">انصراف</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

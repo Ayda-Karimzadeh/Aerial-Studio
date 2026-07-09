@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load core_tags %}
+{% block title %}صفحه اصلی{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="hero-section">
+    <span class="hero-blob b1"></span>
+    <span class="hero-blob b2"></span>
+    <span class="hero-blob b3"></span>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <span class="badge-gradient mb-3">باشگاه تخصصی ورزش‌های هوایی</span>
+                <h1 class="section-title display-4 mb-4">
+                    پرواز کن، انعطاف‌پذیر باش،<br>
+                    <span class="navbar-brand-gradient">قوی‌تر از همیشه</span>
+                </h1>
+                <p class="fs-5 text-muted mb-4">
+                    در Aerial Studio با آموزش تخصصی سیلک، هوپ، اسلینگ و تمرینات استرچ و انعطاف،
+                    مسیر رشد بدنی و ذهنی خودت را همراه با مربیان حرفه‌ای شروع کن.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{% url 'classes:list' %}" class="btn btn-gradient btn-lg">مشاهده کلاس‌ها <i class="fa-solid fa-arrow-left ms-1"></i></a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-outline-gradient btn-lg">ثبت‌نام رایگان</a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="glass p-4 text-center">
+                    <i class="fa-solid fa-person-falling fa-6x navbar-brand-gradient mb-3"></i>
+                    <p class="text-muted mb-0">بیش از ۵۰۰ هنرجو در حال پرواز با ما</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Disciplines -->
+<section class="py-5 observe-fade">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-eyebrow">رشته‌های آموزشی</span>
+            <h2 class="section-title mt-2">تخصص‌های ما</h2>
+        </div>
+        <div class="row g-4">
+            {% for discipline in disciplines %}
+            <div class="col-md-4 col-lg-2-4 col-sm-6">
+                <div class="glass-card discipline-card">
+                    <div class="discipline-icon">
+                        <i class="fa-solid {{ discipline.icon|default:'fa-wind' }}"></i>
+                    </div>
+                    <h5>{{ discipline.get_name_display }}</h5>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">به‌زودی رشته‌های آموزشی اضافه خواهند شد.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Classes -->
+<section class="py-5 observe-fade">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <span class="section-eyebrow">کلاس‌های فعال</span>
+                <h2 class="section-title mt-2">کلاس‌های پیشنهادی</h2>
+            </div>
+            <a href="{% url 'classes:list' %}" class="btn btn-outline-gradient">مشاهده همه</a>
+        </div>
+        <div class="row g-4">
+            {% for class_session in featured_classes %}
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card class-card h-100">
+                    <div class="class-card-img">
+                        <i class="fa-solid fa-ring"></i>
+                    </div>
+                    <div class="p-4">
+                        <span class="badge-status bg-primary-subtle text-primary mb-2">{{ class_session.discipline.get_name_display }}</span>
+                        <h5>{{ class_session.title }}</h5>
+                        <p class="text-muted small mb-2">
+                            <i class="fa-regular fa-calendar me-1"></i> {{ class_session.session_date }}
+                            &nbsp; <i class="fa-regular fa-clock me-1"></i> {{ class_session.start_time|time:"H:i" }}
+                        </p>
+                        <div class="capacity-bar mb-2">
+                            <div class="capacity-bar-fill" data-fill="{% percentage class_session.booked_count class_session.capacity %}"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">{{ class_session.price|persian_currency }}</span>
+                            <a href="{% url 'classes:detail' class_session.pk %}" class="btn btn-sm btn-gradient">جزئیات</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">در حال حاضر کلاس فعالی وجود ندارد.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Coaches -->
+<section class="py-5 observe-fade">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-eyebrow">تیم ما</span>
+            <h2 class="section-title mt-2">مربیان حرفه‌ای</h2>
+        </div>
+        <div class="row g-4">
+            {% for coach in coaches %}
+            <div class="col-md-3 col-6">
+                <div class="glass-card text-center p-4">
+                    <div class="discipline-icon mx-auto">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h6 class="mb-1">{{ coach.user.get_full_name }}</h6>
+                    <p class="text-muted small mb-0">{{ coach.years_of_experience }} سال سابقه</p>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">به‌زودی معرفی می‌شوند.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+{% if testimonials %}
+<section class="py-5 observe-fade">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-eyebrow">نظرات</span>
+            <h2 class="section-title mt-2">هنرجویان ما می‌گویند</h2>
+        </div>
+        <div class="row g-4">
+            {% for t in testimonials %}
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="mb-2 text-warning">
+                        {% for i in "12345" %}<i class="fa-solid fa-star"></i>{% endfor %}
+                    </div>
+                    <p class="text-muted">{{ t.content }}</p>
+                    <h6 class="mb-0 mt-3">{{ t.student_name }}</h6>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="py-5">
+    <div class="container">
+        <div class="glass p-5 text-center" style="background: var(--gradient-primary);">
+            <h2 class="text-white fw-bold mb-3">آماده شروع سفر خودت هستی؟</h2>
+            <p class="text-white-50 mb-4">همین امروز ثبت‌نام کن و اولین کلاس آزمایشی خود را رزرو کن.</p>
+            <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg fw-bold">ثبت‌نام کن</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

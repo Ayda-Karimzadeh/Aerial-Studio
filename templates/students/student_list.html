@@ -1,0 +1,57 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load crispy_forms_tags core_tags %}
+{% block title %}هنرجویان{% endblock %}
+{% block dashboard_title %}مدیریت هنرجویان{% endblock %}
+{% block dashboard_subtitle %}لیست کامل هنرجویان باشگاه{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <form method="get" class="d-flex gap-2 flex-wrap">
+        {{ filter.form.search }}
+        {{ filter.form.membership_status }}
+        {{ filter.form.level }}
+        <button type="submit" class="btn btn-outline-gradient"><i class="fa-solid fa-filter"></i></button>
+    </form>
+    {% if user.role == 'admin' or user.is_superuser %}
+    <a href="{% url 'students:create' %}" class="btn btn-gradient"><i class="fa-solid fa-plus me-1"></i> ثبت هنرجوی جدید</a>
+    {% endif %}
+</div>
+
+<div class="row g-4">
+    {% for student in students %}
+    <div class="col-md-6 col-lg-4">
+        <div class="glass-card p-4">
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="discipline-icon mb-0"><i class="fa-solid fa-user"></i></div>
+                <div>
+                    <h6 class="mb-0">{{ student.user.get_full_name }}</h6>
+                    <small class="text-muted">{{ student.user.email }}</small>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="badge-status bg-{{ student.membership_status|badge_color }}-subtle text-{{ student.membership_status|badge_color }}">{{ student.get_membership_status_display }}</span>
+                <span class="badge-status bg-primary-subtle text-primary">{{ student.get_level_display }}</span>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+                <a href="{% url 'students:detail' student.pk %}" class="btn btn-sm btn-outline-gradient flex-fill">جزئیات</a>
+                {% if user.role == 'admin' or user.is_superuser %}
+                <a href="{% url 'students:edit' student.pk %}" class="btn btn-sm btn-gradient flex-fill">ویرایش</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted py-5">هنرجویی یافت نشد.</p>
+    {% endfor %}
+</div>
+
+{% if is_paginated %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>{% endif %}
+        <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>{% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

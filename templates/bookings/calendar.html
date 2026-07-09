@@ -1,0 +1,41 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load core_tags %}
+{% block title %}تقویم کلاس‌ها{% endblock %}
+{% block dashboard_title %}تقویم کلاس‌ها{% endblock %}
+{% block dashboard_subtitle %}کلاس مورد نظرت را رزرو کن{% endblock %}
+
+{% block dashboard_content %}
+<div class="row g-4">
+    {% for c in classes %}
+    <div class="col-md-6 col-lg-4">
+        <div class="glass-card class-card h-100">
+            <div class="class-card-img"><i class="fa-solid fa-ring"></i></div>
+            <div class="p-4">
+                <span class="badge-status bg-primary-subtle text-primary mb-2">{{ c.discipline.get_name_display }}</span>
+                <h6 class="mt-2">{{ c.title }}</h6>
+                <p class="text-muted small mb-2">{{ c.session_date }} - {{ c.start_time|time:"H:i" }}</p>
+                <div class="capacity-bar mb-2">
+                    <div class="capacity-bar-fill" data-fill="{% percentage c.booked_count c.capacity %}"></div>
+                </div>
+                <small class="text-muted d-block mb-2">{{ c.remaining_capacity }} جای خالی</small>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">{{ c.price|persian_currency }}</span>
+                    {% if c.pk in my_booked_ids %}
+                    <span class="badge-status bg-success-subtle text-success">رزرو شده</span>
+                    {% elif c.is_full %}
+                    <button class="btn btn-sm btn-secondary" disabled>تکمیل ظرفیت</button>
+                    {% else %}
+                    <form method="post" action="{% url 'bookings:create' c.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-gradient">رزرو</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted py-5">کلاس فعالی برای رزرو وجود ندارد.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}ثبت پرداخت{% endblock %}
+{% block dashboard_title %}ثبت پرداخت جدید{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4 p-md-5" style="max-width:600px;">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-gradient">ثبت پرداخت</button>
+            <a href="{% url 'payments:list' %}" class="btn btn-outline-gradient">انصراف</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

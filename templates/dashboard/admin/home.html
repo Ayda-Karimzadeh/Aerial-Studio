@@ -1,0 +1,93 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load core_tags %}
+{% block title %}داشبورد مدیر{% endblock %}
+{% block dashboard_title %}داشبورد مدیر{% endblock %}
+{% block dashboard_subtitle %}نمای کلی باشگاه{% endblock %}
+
+{% block dashboard_content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
+            <div class="stat-value">{{ total_students }}</div>
+            <div class="stat-label">هنرجویان</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+            <div class="stat-value">{{ total_coaches }}</div>
+            <div class="stat-label">مربیان</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-ring"></i></div>
+            <div class="stat-value">{{ total_classes }}</div>
+            <div class="stat-label">کلاس‌ها</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+            <div class="stat-value">{{ total_revenue|persian_currency }}</div>
+            <div class="stat-label">درآمد کل</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="glass-card p-4 h-100">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-clock-rotate-left me-1"></i> رزروهای اخیر</h6>
+            {% for booking in recent_bookings %}
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="border-color: var(--glass-border) !important;">
+                <div>
+                    <p class="mb-0 fw-bold">{{ booking.student.get_full_name }}</p>
+                    <small class="text-muted">{{ booking.class_session.title }}</small>
+                </div>
+                <span class="badge-status bg-{{ booking.status|badge_color }}-subtle text-{{ booking.status|badge_color }}">{{ booking.get_status_display }}</span>
+            </div>
+            {% empty %}
+            <p class="text-muted text-center py-3">رزروی ثبت نشده است.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="glass-card p-4 h-100">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-money-bill-wave me-1"></i> پرداخت‌های اخیر</h6>
+            {% for payment in recent_payments %}
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="border-color: var(--glass-border) !important;">
+                <div>
+                    <p class="mb-0 fw-bold">{{ payment.student.get_full_name }}</p>
+                    <small class="text-muted">{{ payment.amount|persian_currency }}</small>
+                </div>
+                <span class="badge-status bg-{{ payment.status|badge_color }}-subtle text-{{ payment.status|badge_color }}">{{ payment.get_status_display }}</span>
+            </div>
+            {% empty %}
+            <p class="text-muted text-center py-3">پرداختی ثبت نشده است.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="glass-card p-4 mt-4">
+    <h6 class="fw-bold mb-3"><i class="fa-solid fa-calendar-days me-1"></i> کلاس‌های پیش رو</h6>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead><tr class="text-muted"><th>کلاس</th><th>تاریخ</th><th>ظرفیت</th></tr></thead>
+            <tbody>
+                {% for c in upcoming_classes %}
+                <tr>
+                    <td>{{ c.title }}</td>
+                    <td>{{ c.session_date }}</td>
+                    <td>{{ c.remaining_capacity }} / {{ c.capacity }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-center text-muted py-3">کلاسی وجود ندارد.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

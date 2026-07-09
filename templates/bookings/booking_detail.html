@@ -1,0 +1,30 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load core_tags %}
+{% block title %}جزئیات رزرو{% endblock %}
+{% block dashboard_title %}جزئیات رزرو{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4 p-md-5" style="max-width:650px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">{{ booking.class_session.title }}</h5>
+        <span class="badge-status bg-{{ booking.status|badge_color }}-subtle text-{{ booking.status|badge_color }}">{{ booking.get_status_display }}</span>
+    </div>
+    <p class="text-muted mb-1"><i class="fa-solid fa-wind me-1"></i> {{ booking.class_session.discipline.get_name_display }}</p>
+    <p class="text-muted mb-1"><i class="fa-regular fa-calendar me-1"></i> {{ booking.class_session.session_date }}</p>
+    <p class="text-muted mb-1"><i class="fa-regular fa-clock me-1"></i> {{ booking.class_session.start_time|time:"H:i" }} - {{ booking.class_session.end_time|time:"H:i" }}</p>
+    <p class="text-muted mb-3"><i class="fa-solid fa-user-tie me-1"></i> مربی: {{ booking.class_session.coach.get_full_name|default:"—" }}</p>
+
+    {% if booking.notes %}
+    <div class="glass-card p-3 mb-3"><small class="text-muted">یادداشت شما:</small><p class="mb-0">{{ booking.notes }}</p></div>
+    {% endif %}
+
+    {% if booking.status == 'cancelled' %}
+    <div class="glass-card p-3">
+        <small class="text-muted">دلیل لغو:</small>
+        <p class="mb-0">{{ booking.cancellation_reason|default:"ثبت نشده" }}</p>
+    </div>
+    {% endif %}
+
+    <a href="{% url 'bookings:list' %}" class="btn btn-outline-gradient mt-3">بازگشت به لیست رزروها</a>
+</div>
+{% endblock %}

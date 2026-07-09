@@ -1,0 +1,36 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% block title %}ارزیابی‌های من{% endblock %}
+{% block dashboard_title %}ارزیابی‌های ثبت‌شده{% endblock %}
+{% block dashboard_subtitle %}لیست ارزیابی‌های شما از هنرجویان{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead><tr class="text-muted"><th>هنرجو</th><th>کلاس</th><th>سطح</th><th>امتیاز</th><th>تاریخ</th></tr></thead>
+            <tbody>
+                {% for e in evaluations %}
+                <tr>
+                    <td class="fw-bold">{{ e.student.get_full_name }}</td>
+                    <td>{{ e.class_session.title|default:"—" }}</td>
+                    <td>{{ e.get_skill_level_display }}</td>
+                    <td><span class="badge-status bg-primary-subtle text-primary">{{ e.score }}/10</span></td>
+                    <td class="text-muted">{{ e.created_at|date:"Y/m/d" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center text-muted py-4">هنوز ارزیابی ثبت نکرده‌اید.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% if is_paginated %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>{% endif %}
+        <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>{% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

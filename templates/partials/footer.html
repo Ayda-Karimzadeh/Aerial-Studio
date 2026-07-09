@@ -1,0 +1,43 @@
+<footer class="footer-glass">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h4 class="navbar-brand-gradient fs-3 mb-3">Aerial Studio</h4>
+                <p class="text-muted">باشگاه تخصصی ورزش‌های هوایی؛ جایی برای پرواز، انعطاف و رشد در فضایی امن و حرفه‌ای.</p>
+                <div class="d-flex gap-2">
+                    <a href="#" class="btn btn-sm btn-outline-gradient rounded-circle"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="btn btn-sm btn-outline-gradient rounded-circle"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="btn btn-sm btn-outline-gradient rounded-circle"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-6">
+                <h6 class="fw-bold mb-3">دسترسی سریع</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2">
+                    <li><a href="{% url 'pages:about' %}" class="text-muted">درباره ما</a></li>
+                    <li><a href="{% url 'classes:list' %}" class="text-muted">کلاس‌ها</a></li>
+                    <li><a href="{% url 'coaches:list' %}" class="text-muted">مربیان</a></li>
+                    <li><a href="{% url 'pages:pricing' %}" class="text-muted">تعرفه‌ها</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-6">
+                <h6 class="fw-bold mb-3">رشته‌ها</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2">
+                    <li class="text-muted">سیلک هوایی</li>
+                    <li class="text-muted">هوپ هوایی</li>
+                    <li class="text-muted">اسلینگ</li>
+                    <li class="text-muted">استرچ و انعطاف</li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <h6 class="fw-bold mb-3">تماس با ما</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2 text-muted">
+                    <li><i class="fa-solid fa-location-dot me-2 text-primary"></i>{{ SITE_ADDRESS }}</li>
+                    <li><i class="fa-solid fa-phone me-2 text-primary"></i>{{ SITE_PHONE }}</li>
+                    <li><i class="fa-solid fa-envelope me-2 text-primary"></i>{{ SITE_EMAIL }}</li>
+                </ul>
+            </div>
+        </div>
+        <hr class="my-4" style="border-color: var(--glass-border);">
+        <p class="text-center text-muted mb-0 small">© {% now "Y" %} Aerial Studio. تمامی حقوق محفوظ است.</p>
+    </div>
+</footer>

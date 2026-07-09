@@ -1,0 +1,109 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load core_tags %}
+{% block title %}گزارش‌ها{% endblock %}
+{% block dashboard_title %}گزارش‌گیری{% endblock %}
+{% block dashboard_subtitle %}آمار و تحلیل عملکرد باشگاه{% endblock %}
+
+{% block dashboard_content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
+            <div class="stat-value">{{ total_students }}</div>
+            <div class="stat-label">هنرجویان</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+            <div class="stat-value">{{ total_revenue|persian_currency }}</div>
+            <div class="stat-label">درآمد کل</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-fire"></i></div>
+            <div class="stat-value">{{ popular_discipline.get_name_display|default:"—" }}</div>
+            <div class="stat-label">محبوب‌ترین رشته</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-ring"></i></div>
+            <div class="stat-value">{{ total_classes }}</div>
+            <div class="stat-label">کل کلاس‌ها</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="glass-card p-4 h-100">
+            <h6 class="fw-bold mb-3">روند درآمد و هنرجویان جدید (۶ ماه اخیر)</h6>
+            <canvas id="revenueChart" height="120"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="glass-card p-4 h-100">
+            <h6 class="fw-bold mb-3">توزیع کلاس‌ها بر اساس رشته</h6>
+            <canvas id="disciplineChart" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="glass-card p-4">
+            <h6 class="fw-bold mb-3 text-success"><i class="fa-solid fa-circle-check me-1"></i> کلاس‌های پر شده</h6>
+            {% for c in full_classes %}
+            <div class="d-flex justify-content-between py-2 border-bottom" style="border-color: var(--glass-border) !important;">
+                <span>{{ c.title }}</span><span class="text-muted">{{ c.session_date }}</span>
+            </div>
+            {% empty %}
+            <p class="text-muted text-center py-3">کلاس پر شده‌ای وجود ندارد.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="glass-card p-4">
+            <h6 class="fw-bold mb-3 text-warning"><i class="fa-solid fa-circle-exclamation me-1"></i> کلاس‌های خالی</h6>
+            {% for c in empty_classes %}
+            <div class="d-flex justify-content-between py-2 border-bottom" style="border-color: var(--glass-border) !important;">
+                <span>{{ c.title }}</span><span class="text-muted">{{ c.session_date }}</span>
+            </div>
+            {% empty %}
+            <p class="text-muted text-center py-3">کلاس خالی وجود ندارد.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.3/chart.umd.min.js"></script>
+<script>
+    const revenueData = {{ revenue_chart_data|safe }};
+    const disciplineData = {{ discipline_chart_data|safe }};
+
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: revenueData.labels,
+            datasets: [
+                { label: 'درآمد (تومان)', data: revenueData.revenue, borderColor: '#6C63FF', backgroundColor: 'rgba(108,99,255,0.15)', fill: true, tension: 0.4 },
+                { label: 'هنرجوی جدید', data: revenueData.new_students, borderColor: '#EC4899', backgroundColor: 'rgba(236,72,153,0.1)', fill: true, tension: 0.4, yAxisID: 'y1' }
+            ]
+        },
+        options: { responsive: true, scales: { y1: { position: 'left', display: false } } }
+    });
+
+    new Chart(document.getElementById('disciplineChart'), {
+        type: 'doughnut',
+        data: {
+            labels: disciplineData.labels,
+            datasets: [{ data: disciplineData.counts, backgroundColor: ['#6C63FF', '#8B5CF6', '#EC4899', '#F472B6', '#A78BFA'] }]
+        },
+        options: { responsive: true }
+    });
+</script>
+{% endblock %}

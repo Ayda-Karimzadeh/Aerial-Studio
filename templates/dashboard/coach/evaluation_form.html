@@ -1,0 +1,15 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}ثبت ارزیابی{% endblock %}
+{% block dashboard_title %}ثبت ارزیابی جدید{% endblock %}
+{% block dashboard_subtitle %}ثبت سطح و امتیاز برای هنرجو{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4 p-md-5" style="max-width:700px;">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-gradient btn-lg mt-3">ثبت ارزیابی</button>
+    </form>
+</div>
+{% endblock %}

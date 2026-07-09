@@ -1,0 +1,14 @@
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show glass alert-auto-dismiss" role="alert">
+        {% if message.tags == 'success' %}<i class="fa-solid fa-circle-check me-2"></i>{% endif %}
+        {% if message.tags == 'error' or message.tags == 'danger' %}<i class="fa-solid fa-circle-exclamation me-2"></i>{% endif %}
+        {% if message.tags == 'warning' %}<i class="fa-solid fa-triangle-exclamation me-2"></i>{% endif %}
+        {% if message.tags == 'info' %}<i class="fa-solid fa-circle-info me-2"></i>{% endif %}
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

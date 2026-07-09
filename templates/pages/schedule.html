@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load core_tags %}
+{% block title %}برنامه هفتگی{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-eyebrow">تقویم کلاس‌ها</span>
+            <h1 class="section-title mt-2">برنامه هفتگی کلاس‌ها</h1>
+        </div>
+
+        <div class="glass p-3 p-md-4">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr class="text-muted">
+                            <th>کلاس</th>
+                            <th>رشته</th>
+                            <th>مربی</th>
+                            <th>تاریخ</th>
+                            <th>ساعت</th>
+                            <th>ظرفیت</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for class_session in classes %}
+                        <tr>
+                            <td class="fw-bold">{{ class_session.title }}</td>
+                            <td><span class="badge-status bg-primary-subtle text-primary">{{ class_session.discipline.get_name_display }}</span></td>
+                            <td>{{ class_session.coach.get_full_name|default:"—" }}</td>
+                            <td>{{ class_session.session_date }}</td>
+                            <td>{{ class_session.start_time|time:"H:i" }} - {{ class_session.end_time|time:"H:i" }}</td>
+                            <td style="min-width:120px;">
+                                <div class="capacity-bar">
+                                    <div class="capacity-bar-fill" data-fill="{% percentage class_session.booked_count class_session.capacity %}"></div>
+                                </div>
+                                <small class="text-muted">{{ class_session.remaining_capacity }} جای خالی</small>
+                            </td>
+                            <td><a href="{% url 'classes:detail' class_session.pk %}" class="btn btn-sm btn-outline-gradient">جزئیات</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="text-center text-muted py-4">کلاسی برای نمایش وجود ندارد.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

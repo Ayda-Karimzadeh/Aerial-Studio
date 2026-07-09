@@ -1,0 +1,17 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% block title %}جزئیات ارزیابی{% endblock %}
+{% block dashboard_title %}جزئیات ارزیابی{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4 p-md-5" style="max-width:700px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="badge-status bg-primary-subtle text-primary">{{ evaluation.get_skill_level_display }}</span>
+        <span class="fw-bold fs-4">{{ evaluation.score }}/10</span>
+    </div>
+    <p class="text-muted">{{ evaluation.description }}</p>
+    <hr style="border-color: var(--glass-border);">
+    <p class="mb-1"><strong>هنرجو:</strong> {{ evaluation.student.get_full_name }}</p>
+    <p class="mb-1"><strong>مربی:</strong> {{ evaluation.coach.get_full_name }}</p>
+    <p class="mb-0 text-muted"><strong>تاریخ:</strong> {{ evaluation.created_at|date:"Y/m/d H:i" }}</p>
+</div>
+{% endblock %}

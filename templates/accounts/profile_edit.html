@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}ویرایش پروفایل{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="glass p-4 p-md-5">
+                    <h3 class="section-title mb-4">ویرایش پروفایل</h3>
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="d-flex gap-2 mt-3">
+                            <button type="submit" class="btn btn-gradient">ذخیره تغییرات</button>
+                            <a href="{% url 'accounts:profile' %}" class="btn btn-outline-gradient">انصراف</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

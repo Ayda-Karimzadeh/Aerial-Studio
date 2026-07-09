@@ -1,0 +1,16 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% block title %}حذف کلاس{% endblock %}
+{% block dashboard_title %}حذف کلاس{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card p-4 p-md-5" style="max-width:600px;">
+    <p class="fs-5">آیا از حذف کلاس <strong>{{ object.title }}</strong> اطمینان دارید؟</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-danger">بله، حذف شود</button>
+            <a href="{% url 'classes:manage_list' %}" class="btn btn-outline-gradient">انصراف</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

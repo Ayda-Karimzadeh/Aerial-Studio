@@ -1,0 +1,60 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load core_tags %}
+{% block title %}داشبورد مربی{% endblock %}
+{% block dashboard_title %}داشبورد مربی{% endblock %}
+{% block dashboard_subtitle %}کلاس‌ها و ارزیابی‌های شما{% endblock %}
+
+{% block dashboard_content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-4 col-6">
+        <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-ring"></i></div>
+            <div class="stat-value">{{ total_classes }}</div>
+            <div class="stat-label">کلاس‌های من</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="glass-card p-4 h-100">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-calendar-days me-1"></i> کلاس‌های پیش رو</h6>
+            <div class="row g-3">
+                {% for c in my_classes %}
+                <div class="col-md-6">
+                    <div class="glass-card p-3">
+                        <span class="badge-status bg-primary-subtle text-primary mb-2">{{ c.discipline.get_name_display }}</span>
+                        <h6>{{ c.title }}</h6>
+                        <p class="text-muted small mb-0">{{ c.session_date }} - {{ c.start_time|time:"H:i" }}</p>
+                        <div class="capacity-bar mt-2">
+                            <div class="capacity-bar-fill" data-fill="{% percentage c.booked_count c.capacity %}"></div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted text-center py-3">کلاسی برای شما تخصیص داده نشده است.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="glass-card p-4 h-100">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-star me-1"></i> آخرین ارزیابی‌ها</h6>
+            {% for e in recent_evaluations %}
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="border-color: var(--glass-border) !important;">
+                <div>
+                    <p class="mb-0 fw-bold">{{ e.student.get_full_name }}</p>
+                    <small class="text-muted">{{ e.get_skill_level_display }}</small>
+                </div>
+                <span class="badge-status bg-primary-subtle text-primary">{{ e.score }}/10</span>
+            </div>
+            {% empty %}
+            <p class="text-muted text-center py-3">ارزیابی ثبت نشده است.</p>
+            {% endfor %}
+            <a href="{% url 'evaluations:create' %}" class="btn btn-gradient w-100 mt-3">
+                <i class="fa-solid fa-plus me-1"></i> ثبت ارزیابی جدید
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
