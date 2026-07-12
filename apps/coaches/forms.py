@@ -24,7 +24,7 @@ class CoachCreateForm(forms.ModelForm):
         model = CoachProfile
         fields = ('specialties', 'bio', 'years_of_experience', 'instagram')
         widgets = {
-            'specialties': forms.SelectMultiple(attrs={'class': 'form-select'}),
+            'specialties': forms.CheckboxSelectMultiple,
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'years_of_experience': forms.NumberInput(attrs={'class': 'form-control'}),
             'instagram': forms.TextInput(attrs={'class': 'form-control'}),
@@ -45,13 +45,16 @@ class CoachCreateForm(forms.ModelForm):
             role=User.Role.COACH,
         )
         user.set_password(self.cleaned_data['password'])
-        user.save()
+        user.save()  # این خط به‌صورت خودکار (از طریق signal) یک CoachProfile خالی می‌سازد
 
-        profile = super().save(commit=False)
-        profile.user = user
+        # به‌جای ساخت یک پروفایل جدید، همان پروفایلی که signal ساخته را می‌گیریم و تکمیل می‌کنیم
+        profile = user.coach_profile
+        profile.bio = self.cleaned_data['bio']
+        profile.years_of_experience = self.cleaned_data['years_of_experience']
+        profile.instagram = self.cleaned_data['instagram']
         if commit:
             profile.save()
-            self.save_m2m()
+            profile.specialties.set(self.cleaned_data['specialties'])
         return profile
 
 
@@ -62,7 +65,7 @@ class CoachUpdateForm(forms.ModelForm):
         model = CoachProfile
         fields = ('specialties', 'bio', 'years_of_experience', 'instagram', 'is_active')
         widgets = {
-            'specialties': forms.SelectMultiple(attrs={'class': 'form-select'}),
+            'specialties': forms.CheckboxSelectMultiple,
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'years_of_experience': forms.NumberInput(attrs={'class': 'form-control'}),
             'instagram': forms.TextInput(attrs={'class': 'form-control'}),

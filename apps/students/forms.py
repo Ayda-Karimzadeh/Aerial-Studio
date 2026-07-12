@@ -48,10 +48,16 @@ class StudentCreateForm(forms.ModelForm):
             role=User.Role.STUDENT,
         )
         user.set_password(self.cleaned_data['password'])
-        user.save()
+        user.save()  # این خط به‌صورت خودکار (از طریق signal) یک StudentProfile خالی می‌سازد
 
-        profile = super().save(commit=False)
-        profile.user = user
+        # به‌جای ساخت یک پروفایل جدید، همان پروفایلی که signal ساخته را می‌گیریم و تکمیل می‌کنیم
+        profile = user.student_profile
+        profile.level = self.cleaned_data['level']
+        profile.birth_date = self.cleaned_data['birth_date']
+        profile.address = self.cleaned_data['address']
+        profile.emergency_contact_name = self.cleaned_data['emergency_contact_name']
+        profile.emergency_contact_phone = self.cleaned_data['emergency_contact_phone']
+        profile.medical_notes = self.cleaned_data['medical_notes']
         if commit:
             profile.save()
         return profile
