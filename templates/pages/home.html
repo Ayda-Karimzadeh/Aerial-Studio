@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load core_tags %}
+{% load static %}
 {% block title %}صفحه اصلی{% endblock %}
 
 {% block content %}
@@ -12,13 +13,13 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-7">
-                <span class="badge-gradient mb-3">باشگاه تخصصی ورزش‌های هوایی</span>
+                <span class="badge-gradient mb-3">باشگاه تخصصی ورزش‌های اریال</span>
                 <h1 class="section-title display-4 mb-4">
                     پرواز کن، انعطاف‌پذیر باش،<br>
                     <span class="navbar-brand-gradient">قوی‌تر از همیشه</span>
                 </h1>
                 <p class="fs-5 text-muted mb-4">
-                    در Aerial Studio با آموزش تخصصی سیلک، هوپ، اسلینگ و تمرینات استرچ و انعطاف،
+                    در Aerial Studio با آموزش تخصصی سیلک، هوپ، اسلینگ و تمرینات استرچ و انعطاف，
                     مسیر رشد بدنی و ذهنی خودت را همراه با مربیان حرفه‌ای شروع کن.
                 </p>
                 <div class="d-flex gap-3 flex-wrap">
@@ -28,7 +29,7 @@
             </div>
             <div class="col-lg-5 d-none d-lg-block">
                 <div class="glass p-4 text-center">
-                    <i class="fa-solid fa-person-falling fa-6x navbar-brand-gradient mb-3"></i>
+                    <img src="{% static 'img/hero-illustration.png' %}" alt="Aerial Studio" class="img-fluid rounded-4" style="max-height: 320px; object-fit: cover;">
                     <p class="text-muted mb-0">بیش از ۵۰۰ هنرجو در حال پرواز با ما</p>
                 </div>
             </div>

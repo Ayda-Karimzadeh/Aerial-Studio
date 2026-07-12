@@ -35,7 +35,8 @@
             <div class="d-flex gap-2 mt-3">
                 <a href="{% url 'students:detail' student.pk %}" class="btn btn-sm btn-outline-gradient flex-fill">جزئیات</a>
                 {% if user.role == 'admin' or user.is_superuser %}
-                <a href="{% url 'students:edit' student.pk %}" class="btn btn-sm btn-gradient flex-fill">ویرایش</a>
+                <a href="{% url 'students:edit' student.pk %}" class="btn btn-sm btn-gradient">ویرایش</a>
+                <a href="{% url 'students:delete' student.pk %}" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></a>
                 {% endif %}
             </div>
         </div>
