@@ -59,7 +59,14 @@ class CoachCreateForm(forms.ModelForm):
 
 
 class CoachUpdateForm(forms.ModelForm):
-    """فرم ویرایش اطلاعات مربی."""
+    """فرم ویرایش اطلاعات مربی (شامل نام، نام خانوادگی و شماره موبایل کاربر)."""
+
+    first_name = forms.CharField(label='نام', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(label='نام خانوادگی', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    phone_number = forms.CharField(
+        label='شماره موبایل', max_length=11, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = CoachProfile
@@ -70,6 +77,27 @@ class CoachUpdateForm(forms.ModelForm):
             'years_of_experience': forms.NumberInput(attrs={'class': 'form-control'}),
             'instagram': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['phone_number'].initial = self.instance.user.phone_number
+        field_order = ['first_name', 'last_name', 'phone_number', 'specialties',
+                        'bio', 'years_of_experience', 'instagram', 'is_active']
+        self.order_fields(field_order)
+
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        profile.user.first_name = self.cleaned_data['first_name']
+        profile.user.last_name = self.cleaned_data['last_name']
+        profile.user.phone_number = self.cleaned_data['phone_number']
+        if commit:
+            profile.user.save()
+            profile.save()
+            self.save_m2m()
+        return profile
 
 
 class WeeklyScheduleForm(forms.ModelForm):

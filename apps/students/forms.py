@@ -64,7 +64,14 @@ class StudentCreateForm(forms.ModelForm):
 
 
 class StudentUpdateForm(forms.ModelForm):
-    """فرم ویرایش اطلاعات هنرجو توسط مدیر."""
+    """فرم ویرایش اطلاعات هنرجو توسط مدیر (شامل نام، نام خانوادگی و شماره موبایل کاربر)."""
+
+    first_name = forms.CharField(label='نام', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(label='نام خانوادگی', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    phone_number = forms.CharField(
+        label='شماره موبایل', max_length=11, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = StudentProfile
@@ -79,3 +86,27 @@ class StudentUpdateForm(forms.ModelForm):
             'emergency_contact_phone': forms.TextInput(attrs={'class': 'form-control'}),
             'medical_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # مقداردهی اولیه‌ی فیلدهای نام/نام‌خانوادگی/موبایل از روی کاربر مرتبط
+        if self.instance and self.instance.pk:
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['phone_number'].initial = self.instance.user.phone_number
+        # این فیلدها باید همیشه بالای فرم نمایش داده بشن
+        field_order = ['first_name', 'last_name', 'phone_number', 'membership_status',
+                        'level', 'birth_date', 'address', 'emergency_contact_name',
+                        'emergency_contact_phone', 'medical_notes']
+        self.order_fields(field_order)
+
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        # به‌روزرسانی فیلدهای مربوط به حساب کاربری (User) که در پروفایل ذخیره نمی‌شوند
+        profile.user.first_name = self.cleaned_data['first_name']
+        profile.user.last_name = self.cleaned_data['last_name']
+        profile.user.phone_number = self.cleaned_data['phone_number']
+        if commit:
+            profile.user.save()
+            profile.save()
+        return profile
